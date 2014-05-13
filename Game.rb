@@ -1,5 +1,6 @@
 require './SuperClasses.rb'
 require './Rook.rb'
+require './Queen.rb'
 
-r = Rook.new([0,0])
-p r.moves
+q = Rook.new([4,4])
+p q.moves

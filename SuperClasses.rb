@@ -11,6 +11,12 @@ class Piece
 end
 
 class SlidingPiece < Piece
+  DIAGONAL_DELTAS = [
+    [1, 1],
+    [-1, -1],
+    [1, -1],
+    [-1, 1]
+  ]
   def moves
     x, y = @current_pos[0], @current_pos[1]
     possible_moves = []
@@ -19,8 +25,18 @@ class SlidingPiece < Piece
       (0..7).each{ |col| possible_moves << [x, col] }
       (0..7).each{ |row| possible_moves << [row, y] }
     end
-
-    possible_moves.reject{ |pos| pos == @current_pos }
+    
+    if self.move_dirs.include?(:diagonal)
+      DIAGONAL_DELTAS.each do |dx, dy|
+        while (x + dx).between?(0, 7) && (y + dy).between?(0, 7)
+          possible_moves << [x + dx, y + dy]
+          x += dx; y += dy
+        end
+        x, y = @current_pos[0], @current_pos[1]
+      end
+    end
+      
+    possible_moves.reject{ |pos| pos == @current_pos }.sort
   end
 end
 
