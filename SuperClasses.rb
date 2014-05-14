@@ -22,17 +22,12 @@ class Piece
     @color = color
     @board[pos] = self
   end
-  
-  def move_into_check?(pos)
-    board_copy = @board.dup
-    board_copy.move(@pos, pos)
-    board_copy.in_check?(@color)
-  end
-  
+    
   def valid_moves
-    self.moves.move_into_check?(pos)
+    #[7,7],[6,7]
+    #[7,7],[5,7]
+    self.moves.reject{ |move| @board.dup.move_into_check?(@pos, move)}
   end
-  
 end
 
 class SlidingPiece < Piece
@@ -65,7 +60,7 @@ class SlidingPiece < Piece
     if self.move_dirs.include?(:diagonal)
       DIAGONAL_DELTAS.each{ |dx, dy| possible_moves += generate_moves(dx, dy) }
     end
-      
+    
     possible_moves.reject{ |pos| pos == @pos }
   end
 end
@@ -91,9 +86,9 @@ class SteppingPiece < Piece
         if @board[[x + dx, y + dy]].color != self.color
           possible_moves << [x + dx, y + dy]
         end
+      else
+        possible_moves << [x + dx, y + dy]
       end
-      
-      possible_moves << [x + dx, y + dy]
     end
     
     possible_moves
@@ -139,7 +134,7 @@ class SteppingPiece < Piece
     if self.move_dirs.include?(:pawn)
       if self.color == :w
         possible_moves += generate_pawn_moves(-1, 6)
-      else #color == :b
+      else
         possible_moves += generate_pawn_moves(1, 1)
       end
     end
