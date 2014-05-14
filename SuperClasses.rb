@@ -1,4 +1,6 @@
 class Piece
+  attr_reader :white_code, :black_code, :fen
+  
   DIAGONAL_DELTAS = [
     [1, 1],
     [-1, -1],
@@ -24,8 +26,6 @@ class Piece
   end
     
   def valid_moves
-    #[7,7],[6,7]
-    #[7,7],[5,7]
     self.moves.reject{ |move| @board.dup.move_into_check?(@pos, move)}
   end
 end

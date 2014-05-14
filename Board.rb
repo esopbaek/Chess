@@ -63,28 +63,49 @@ class Board
     row_num = 8
     each do |row, col|
       print "#{row_num} " if col == 0
-      case self[[row, col]]
-      when NilClass  
+      
+      if self[[row, col]].nil?
         print "   ".back(row, col)
-      when Queen
-        self[[row, col]].color == :w ? (print " \u2655 ".back(row, col)) : (print " \u265B ".back(row, col))
-      when Rook
-        self[[row, col]].color == :w ? (print " \u2656 ".back(row, col)) : (print " \u265C ".back(row, col))
-      when Bishop
-        self[[row, col]].color == :w ? (print " \u2657 ".back(row, col)) : (print " \u265D ".back(row, col))
-      when Knight
-        self[[row, col]].color == :w ? (print " \u2658 ".back(row, col)) : (print " \u265E ".back(row, col))
-      when Pawn
-        self[[row, col]].color == :w ? (print " \u2659 ".back(row, col)) : (print " \u265F ".back(row, col))
-      when King
-        self[[row, col]].color == :w ? (print " \u2654 ".back(row, col)) : (print " \u265A ".back(row, col))
+      else
+        self[[row, col]].color == :w ? (print " #{self[[row, col]].white_code} ".back(row, col)) : (print " #{self[[row, col]].black_code} ".back(row, col))
       end
+
       if col == 7
         row_num -= 1
         puts
       end
     end
     puts "   A  B  C  D  E  F  G  H"
+  end
+  
+  def fen(color, turn)
+    fen_string = ""
+    row_string = ""
+    
+    @board.each_index do |row|
+      row_string = ""
+      
+      @board[row].each_index do |col|
+        if self[[row, col]]
+          if self[[row, col]].color == :w
+            row_string += self[[row, col]].fen.upcase
+          else
+            row_string += self[[row, col]].fen
+          end
+        else
+          if row_string.empty? || row_string[-1].to_i < 1
+            row_string += "1"
+          else
+            row_string[-1] = (row_string[-1].to_i + 1).to_s
+          end
+        end
+      end
+      
+      fen_string += row_string
+      fen_string += "/" 
+    end
+    
+    "#{fen_string[0..-2]} #{color} - - 0 #{turn.to_s}"
   end
   
   def opp_color(color)
@@ -101,8 +122,7 @@ class Board
       end
     end
 
-    all_possible_moves
-      .include?(king_pos)
+    all_possible_moves.include?(king_pos)
   end
   
   def find_piece(type, color)
@@ -138,13 +158,6 @@ class Board
   end
   
   def dup
-=begin
-    new_board = Board.new
-    new_board.each do |row, col|
-      new_board[[row, col]] = self[[row, col]] ? self[[row, col]].dup : nil
-    end
-    new_board
-=end
     Marshal.load(Marshal.dump(self))
   end
 end
