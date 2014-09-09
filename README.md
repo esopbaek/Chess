@@ -8,5 +8,4 @@ To play the game, go to the "Chess" directory in the terminal:
     ruby game.rb
 
 Follow the instructions and play with another human, or the computer.
-
 ![ScreenShot](Chess.png)
