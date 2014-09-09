@@ -9,4 +9,4 @@ To play the game, go to the "Chess" directory in the terminal:
 
 Follow the instructions and play with another human, or the computer.
 
-![ScreenShot](Chess.PNG)
+![ScreenShot](Chess.png)
